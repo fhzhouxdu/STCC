@@ -3,20 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from timm.models.vision_transformer import Block
 
-# class UncertaintyLoss(nn.Module):
-#     def __init__(self, num=2):
-#         super().__init__()
-#         sigma = torch.zeros(num, requires_grad=True)
-#         self.sigma = torch.nn.Parameter(sigma)
-        
-#     def forward(self, x):
-#         loss_sum = 0.
-#         for i, [y_true, y_pred] in enumerate(x):
-#             loss = F.mse_loss(y_true, y_pred)
-#             pre = torch.exp(-self.sigma[i])
-#             loss_sum += pre*loss+self.sigma[i]
-#         return loss_sum
-
 def UncertaintyLoss(y):
     loss_sum = 0.
     for i, [y_true, y_pred, theta] in enumerate(y):

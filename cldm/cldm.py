@@ -120,8 +120,6 @@ class ControlledUnetModel(UNetModel):
         
         for i, module in enumerate(self.output_blocks):
             
-            # print(hs[-1].shape)
-            # print(h.shape)
             h = torch.cat([h, hs.pop()+control.pop()], dim=1)
             h = module(h, emb, context, Y.pop())
                 
@@ -461,7 +459,7 @@ class ControlLDM(LatentDiffusion):
 
         diffusion_model = self.model.diffusion_model
 
-        # cond_emp = torch.cat(cond['emp'], 1)
+        cond_emp = torch.cat(cond['emp'], 1)
         
         cond_txt = torch.cat(cond['c_crossattn'], 1)
         cond_img = self.cond_stage_model.model.encode_image(torch.cat(cond['clip'], 1)).unsqueeze(1)
@@ -478,15 +476,6 @@ class ControlLDM(LatentDiffusion):
             self.uncertainty_loss = loss_uncertainty
             cond_fus = w[:,0,:]*cond_txt + w[:,1,:]*cond_img
             
-
-            import random
-            random_number = random.choice([0,1,2])
-            if random_number == 0:
-                cond_fus = cond_txt
-            elif random_number == 1:
-                cond_fus = torch.tile(cond_img, (1, 77, 1))
-            elif random_number == 2:
-                cond_fus = (cond_txt + cond_img)/2
         else:
             cond_txt = cond_emp
             cond_txt = self.shared_encoder(cond_txt)
@@ -501,8 +490,7 @@ class ControlLDM(LatentDiffusion):
         if cond['c_concat'] is None:
             eps = diffusion_model(x=x_noisy, timesteps=t, context=cond_emp, control=None, only_mid_control=self.only_mid_control)
         else:
-            # control,y = self.control_model(x=x_noisy, hint=torch.cat(cond['c_concat'], 1), timesteps=t, context=cond_fus)
-            control,y = self.control_model(x=x_noisy, hint=torch.cat(cond['c_concat'], 1), timesteps=t, context=cond_txt)
+            control,y = self.control_model(x=x_noisy, hint=torch.cat(cond['c_concat'], 1), timesteps=t, context=cond_fus)
             control = [c * scale for c, scale in zip(control, self.control_scales)]
             eps = diffusion_model(x=x_noisy, timesteps=t, context=cond_txt, control=control, Y=y, only_mid_control=self.only_mid_control)
         

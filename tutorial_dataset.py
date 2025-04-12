@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 
 class MyDataset(Dataset):
     def __init__(self):
-        with open('/root/sar2opt/sar2opt_test_rs-llava.json', 'rt') as f:
+        with open('/root/STCC/training/new_sen1-2_train_rs-llava.json', 'rt') as f:
             self.data = json.load(f)
 
     def __len__(self):
@@ -19,8 +19,8 @@ class MyDataset(Dataset):
         opt_filename = item['target']
         prompt = item['prompt']
 
-        source = cv2.imread('/root/sar2opt/A/' + sar_filename)
-        target = cv2.imread('/root/sar2opt/B/' + opt_filename)
+        source = cv2.imread('/root/autodl-tmp/sen1-2/trainA/' + sar_filename)
+        target = cv2.imread('/root/autodl-tmp/sen1-2/trainB/' + opt_filename)
 
         # Do not forget that OpenCV read images in BGR order.
         source = cv2.cvtColor(source, cv2.COLOR_BGR2RGB)
