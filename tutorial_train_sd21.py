@@ -22,7 +22,7 @@ model.load_state_dict(load_state_dict(resume_path, location='cpu'),strict=False)
 model.learning_rate = learning_rate
 model.sd_locked = sd_locked
 model.only_mid_control = only_mid_control
-
+model.stage = "train"
 
 # traditional controlnet
 # target_dict = {}

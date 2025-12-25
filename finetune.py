@@ -30,6 +30,7 @@ model.load_state_dict(target_dict,strict=False)
 model.learning_rate = learning_rate
 model.sd_locked = sd_locked
 model.only_mid_control = only_mid_control
+model.stage = "finetune"
 
 checkpoint_callback = ModelCheckpoint(
     dirpath='/root/autodl-tmp/checkpoints',

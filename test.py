@@ -33,6 +33,7 @@ model.load_state_dict(load_state_dict(resume_path, location='cpu'))
 
 model.sd_locked = sd_locked
 model.only_mid_control = only_mid_control
+model.stage = "test"
 model.to('cuda:0').eval()
 ddim_sampler = DDIMSampler(model)
 
